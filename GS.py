@@ -1,16 +1,21 @@
 import numpy as np
 from scipy.linalg import solve
 
+import pdb
+
 def gauss(Q, zero, pi, n, dim, lamda):
-    pi_next = [0.0, 0.0]
+    
     count = 0
     print "Q=",Q,"zero=",zero,"pi=",pi,"dim=",dim,"lamda=",lamda
-    for k in range(1,n):
-        for i in range(1,dim+1):
+    pdb.set_trace()
+    for k in range(0,n):
+        pi_next = [0.0, 0.0,0.0, 0.0]
+        for i in range(0,dim):
             count = 0
-            for j in range(1,i):
+            for j in range(0,i):
+
                 #print "i=",i,"j=",j
-                pi_next[i-1] += (-1.0)*(pi_next[j-1]*Q[j-1][i-1])/Q[i-1][i-1]
+                pi_next[i] += (-1.0)*(pi_next[j]*Q[j][i])/Q[i][i]
                 '''
                 print "i=",i,"j=",j,"upper_half"
                 print "Pi[",i,"]",pi[i-1]
@@ -18,21 +23,23 @@ def gauss(Q, zero, pi, n, dim, lamda):
                 print "Q[",i,"]","[",i,"]=",Q[i-1][i-1]
                 print "pi_next[",i-1,"]",pi_next[i-1]
                 '''
-            for j in range(i+1,dim+1):
+            for j in range(i+1,dim):
                 print "i=",i,"j=",j
-                pi_next[i-1] += (-1.0)*(pi[j-1]*Q[j-1][i-1])/Q[i-1][i-1]
+                pi_next[i] += (-1.0)*(pi[j]*Q[j][i])/Q[i][i]
                 '''
                 print "i=",i,"j=",j,"lower_half"
                 print "Pi[",i,"]",pi[i-1]
                 print "Q[",j,"]","[",i,"]=",Q[j-1][i-1]
                 print "Q[",i,"]","[",i,"]=",Q[i-1][i-1]
                 print "pi_next[",i-1,"]",pi_next[i-1]
-            print str(k).zfill(4),
-            print(pi_next)
             '''
-            if(pi_next[i-1]-pi[i-1]<lamda):
-                count+=1
-            pi = pi_next
+        print str(k).zfill(4),
+        print(pi_next)
+            
+        if(abs(pi_next[i]-pi[i]) < lamda):
+            count+=1
+        pi_next = pi_next / np.sum(pi_next);
+        pi = pi_next ;
         if(count>=dim):
             print "BREAK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
             break
@@ -55,11 +62,11 @@ Q3 = np.array([[-1.0, 1.0],\
               [1.0, -1.0]])
 #print Q
 zero = [0.0, 0.0, 0.0, 0.0]#solution to Ax = b
-pi = [1.0, 0.0]#what we are attempting to solve for
+pi = [1.0,1.0,1.0,1.0]#what we are attempting to solve for
 
 n = 46#number of iterations
 
 print "final result!!!"
-pi = gauss(Q3, zero, pi, n, 2, l)
+pi = gauss(Q, zero, pi, n, 4, l)
 print pi
 
