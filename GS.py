@@ -6,33 +6,16 @@ import pdb
 def gauss(Q, zero, pi, n, dim, lamda):
     
     count = 0
-    print "Q=",Q,"zero=",zero,"pi=",pi,"dim=",dim,"lamda=",lamda
     pdb.set_trace()
     for k in range(0,n):
         pi_next = [0.0, 0.0,0.0, 0.0]
         for i in range(0,dim):
             count = 0
             for j in range(0,i):
-
-                #print "i=",i,"j=",j
                 pi_next[i] += (-1.0)*(pi_next[j]*Q[j][i])/Q[i][i]
-                '''
-                print "i=",i,"j=",j,"upper_half"
-                print "Pi[",i,"]",pi[i-1]
-                print "Q[",j,"]","[",i,"]=",Q[j-1][i-1]
-                print "Q[",i,"]","[",i,"]=",Q[i-1][i-1]
-                print "pi_next[",i-1,"]",pi_next[i-1]
-                '''
             for j in range(i+1,dim):
                 print "i=",i,"j=",j
                 pi_next[i] += (-1.0)*(pi[j]*Q[j][i])/Q[i][i]
-                '''
-                print "i=",i,"j=",j,"lower_half"
-                print "Pi[",i,"]",pi[i-1]
-                print "Q[",j,"]","[",i,"]=",Q[j-1][i-1]
-                print "Q[",i,"]","[",i,"]=",Q[i-1][i-1]
-                print "pi_next[",i-1,"]",pi_next[i-1]
-            '''
         print str(k).zfill(4),
         print(pi_next)
             
