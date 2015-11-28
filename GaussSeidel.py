@@ -1,28 +1,35 @@
 import numpy as np
 from scipy.linalg import solve
+import pdb
+from BirthDeath import BirthDeath
 
-def gauss(A, b, x, n):
-
-    L = np.tril(A)#Lower triangle of A
-    U = A - L#Upper triangle of A
-    for i in range(n):
-        x = np.dot(np.linalg.inv(L), b - np.dot(U, x))#dot of (inverse of L & dot of (upper triangle of A and x))
-        print str(i).zfill(4),
-        print(x)
-    return x
+def gauss(Q, n, lamda):
+    pi = np.ones((n,1))
+    while True:
+        pi_next = np.zeros((n,1))
+        for i in range(0,n):
+            for j in range(0,i):
+                pi_next[i] += (-1.0)*(pi_next[j]*Q[j][i])/Q[i][i]
+            for j in range(i+1,n):
+                pi_next[i] += (-1.0)*(pi[j]*Q[j][i])/Q[i][i]
+        pi_next = pi_next / np.sum(pi_next);
+        if(np.linalg.norm(pi_next - pi) < lamda):
+            return pi_next
+        pi = pi_next ;
 
 '''___MAIN___'''
-l = 1e-1
-A = np.array([[-1.0, 1.0, 0.0, 0.0],\
-              [1.0, -1.0-l, 0.0, l], \
-              [2*l, 0.0, -1.0-2*l, 1.0],\
-              [0.0, 0.0, 1.0, -1.0]])
-print A
-b = [0.0, 0.0, 0.0, 0.0]#solution to Ax = b
-x = [0.25, 0.25, 0.25, 0.25]#what we are attempting to solve for
+if __name__ == "__main__":
+    lamda = 1e-7
+    n = 4
+    birth = 1
+    death = 2
+    Q = BirthDeath(n, birth, death)
+#    Q = np.array([[-1.0, 1.0, 0.0, 0.0],\
+#              [1.0, -1.0-l, 0.0, l], \
+#              [2*l, 0.0, -1.0-2*l, 1.0],\
+#              [0.0, 0.0, 1.0, -1.0]])
+    print Q
+    print "final result!!!"
+    pi = gauss(Q,n,lamda)
+    print pi
 
-n = 5#number of iterations
-
-print gauss(A, b, x, n)
-print "final result"
-print solve(A, b)

@@ -21,8 +21,8 @@ def BirthDeath(n,birth,death):
     return res
 
 '''__main()'''
-
-n = 4
-birth = 2
-death = 1
-print BirthDeath(n, birth, death)
+if __name__ == "__main__":
+    n = 4
+    birth = 2
+    death = 1
+    print BirthDeath(n, birth, death)
