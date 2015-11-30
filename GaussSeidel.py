@@ -18,10 +18,11 @@ def GaussSeidel(Q, n, lamda, stopBylamda):
                 pi_next[i] += (-1.0)*(pi[j]*Q[j][i])/Q[i][i]
         pi_next = pi_next / np.sum(pi_next);
         if(stopBylamda == True and np.linalg.norm(pi_next - pi) < lamda):
-            return pi_next
+            return (pi_next, count)
         if(stopBylamda == False and count == lamda):
-            return pi_next
+            return (pi_next, count)
         pi = pi_next ;
+
 
 '''___MAIN___'''
 if __name__ == "__main__":
@@ -31,14 +32,16 @@ if __name__ == "__main__":
     birth = 1
     death = 2
     Q = BirthDeath(n, birth, death)
+    iterations = 0;
 #    Q = np.array([[-1.0, 1.0, 0.0, 0.0],\
 #              [1.0, -1.0-l, 0.0, l], \
 #              [2*l, 0.0, -1.0-2*l, 1.0],\
 #              [0.0, 0.0, 1.0, -1.0]])
 #    print Q
 #    print "final result!!!"
-    pi = GaussSeidel(Q,n,lamda, True)
+    pi, iterations = GaussSeidel(Q,n,lamda, True)
 #    print pi
     end = time.time()
+    print "Number of Iterations: ", iterations
     print "Number of States: ", n
     print "Time Elapsed: ", end-start, " seconds"

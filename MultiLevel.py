@@ -9,20 +9,22 @@ import pdb
 import time 
 import sys
 
-def MultiLevel(P, level):
+def MultiLevel(P, level, count):
     n = P.shape[0];
+    subcount = 0;
     if level == 0:
 #        return linalg.solve(P, np.zeros((n,1)))
         return GaussSeidel(np.transpose(P), n, 1e-7, True)
     else:
-        p_tilde = GaussSeidel(np.transpose(P), n, 3, False)
+        p_tilde, subcount = GaussSeidel(np.transpose(P), n, 3, False)
+        count += subcount
         cluster = Partition(P);
         P_next, p_tilde_next = Coarse(P, p_tilde, cluster);
-        p_bar_next = MultiLevel(P_next, level-1)
+        p_bar_next, count = MultiLevel(P_next, level-1, count)
         p_star_next = np.divide(p_bar_next, p_tilde_next)
         p_star = I(p_star_next, n, cluster)
         p_bar = C(p_tilde, p_star)
-        return p_bar / np.sum(p_bar)
+        return (p_bar / np.sum(p_bar), count)
 
 def Partition(P):
     n = P.shape[0];#return demension of P
@@ -72,8 +74,10 @@ if __name__ == "__main__":
     P = np.transpose(Q)
     #pdb.set_trace()
     level = 1
-    pi = MultiLevel(P, level)
+    iterations = 0;
+    pi, iterations = MultiLevel(P, level, iterations)
     #print pi
     end = time.time()
+    print "Number of Iterations: ", iterations
     print "Number of States: ", n
     print "Time Elapsed: ", end-start, " seconds"
