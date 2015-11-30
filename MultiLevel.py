@@ -1,11 +1,13 @@
 #####################################################
-##      Created on Nov 28, 2015 by Ailing Zhang     ##
+##      Created on Nov 28, 2015 by Ailing Zhang    ##
 #####################################################
 import numpy as np
 from BirthDeath import BirthDeath
 from GaussSeidel import GaussSeidel
 from numpy import linalg
 import pdb
+import time 
+import sys
 
 def MultiLevel(P, level):
     n = P.shape[0];
@@ -23,13 +25,14 @@ def MultiLevel(P, level):
         return p_bar / np.sum(p_bar)
 
 def Partition(P):
-    n = P.shape[0];
+    n = P.shape[0];#return demension of P
     grid = 2
     originalset = range(n)
     cluster = [originalset[i:i+grid] for i in range(0, (n / grid - 1) * grid,grid)]
-    cluster.append(range((n/grid-1)*grid, n))
+    cluster.append(range((n/grid-1)*grid, n))#[[0,1],[2,3],[4,5]]
     return cluster
 
+#equation 12
 def Coarse(P, p_tilde, cluster):
     n = len(cluster)
     P_next = np.zeros((n,n))
@@ -37,7 +40,7 @@ def Coarse(P, p_tilde, cluster):
     for i in range(n):
         for j in cluster[i]:
             p_tilde_next[i] += p_tilde[j]
-
+ 
     for i in range(n):
         for j in range(n):
             sum = 0
@@ -61,12 +64,16 @@ def C(p_tilde, p_star):
     return p_bar
 
 if __name__ == "__main__":
-    n = 6
+    start = time.time()
+    n = int(sys.argv[1])
     birth = 1
     death = 2
-    Q = BirthDeath(n, birth, death)
+    Q = BirthDeath(n, birth, death) #generate transition matrix
     P = np.transpose(Q)
-    pdb.set_trace()
+    #pdb.set_trace()
     level = 1
     pi = MultiLevel(P, level)
-    print pi
+    #print pi
+    end = time.time()
+    print "Number of States: ", n
+    print "Time Elapsed: ", end-start, " seconds"
