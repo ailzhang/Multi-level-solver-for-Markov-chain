@@ -24,7 +24,7 @@ def GaussSeidel(Q, n, lamda, stopBylamda):
 '''___MAIN___'''
 if __name__ == "__main__":
     lamda = 1e-7
-    n = 6
+    n = 100
     birth = 1
     death = 2
     Q = BirthDeath(n, birth, death)

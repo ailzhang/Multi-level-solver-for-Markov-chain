@@ -14,8 +14,8 @@ def MultiLevel(P, level):
         return GaussSeidel(np.transpose(P), n, 1e-7, True)
     else:
         p_tilde = GaussSeidel(np.transpose(P), n, 3, False)
-        cluster = Partition(P);
-        P_next, p_tilde_next = Coarse(P, p_tilde, cluster);
+        cluster = Partition(P)
+        P_next, p_tilde_next = Coarse(P, p_tilde, cluster)
         p_bar_next = MultiLevel(P_next, level-1)
         p_star_next = np.divide(p_bar_next, p_tilde_next)
         p_star = I(p_star_next, n, cluster)
@@ -61,7 +61,7 @@ def C(p_tilde, p_star):
     return p_bar
 
 if __name__ == "__main__":
-    n = 6
+    n = 100
     birth = 1
     death = 2
     Q = BirthDeath(n, birth, death)
