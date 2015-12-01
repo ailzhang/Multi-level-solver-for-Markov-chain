@@ -1,0 +1,10 @@
+#!/bin/bash
+for i in $@
+do
+    python GaussSeidel.py $i >> GaussSeidel_log.txt
+done
+
+for i in $@
+do
+    python MultiLevel.py $i >> MultiLevel_log.txt
+done
