@@ -26,7 +26,7 @@ def BlockedMatrix(n,m):
 		    res[row][col]=randint(1, 3)
 		    local_sum = local_sum + res[row][col]
 	    res[row][row] = -local_sum
-    plotGraph(res, "BlockedMatrix")
+    # plotGraph(res, name)
     return res
 
 '''__main()'''
