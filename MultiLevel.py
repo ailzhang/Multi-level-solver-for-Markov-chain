@@ -36,7 +36,10 @@ def MultiLevel(P, grid = 4, strategy = 1):
         else:
             print "Invalid strategy!"
         strategy = 1
+        start = time.time()
         P_next, p_tilde_next = Coarse(P, p_tilde, cluster);
+        end = time.time()
+        print "Coarse Time:", end-start
         for i in range(P_next.shape[0]):
             if P_next[i][i] == 0:
                 return GaussSeidel(np.transpose(P), n, 1e-7, True)
@@ -44,8 +47,8 @@ def MultiLevel(P, grid = 4, strategy = 1):
         p_star_next = np.divide(p_bar_next, p_tilde_next)
         p_star = I(p_star_next, n, cluster)
         p_bar = C(p_tilde, p_star)
-        end = time.time()
-        print end-start
+        #end = time.time()
+        #print end-start
         return (p_bar / np.sum(p_bar), count+subcount)
 
 def Partition(P, grid):
@@ -73,6 +76,8 @@ def Coarse(P, p_tilde, cluster):
                     sum_i += P[l][k]
                 sum += sum_i * p_tilde[k]
             P_next[j][i] = sum / p_tilde_next[i]
+#    print "P_next:", P_next
+    print "P_next length:", len(P_next), "p_tilde_next length:", len(p_tilde_next)
     return (P_next, p_tilde_next)
 
 def I(p_star_next, n, cluster):
@@ -99,7 +104,7 @@ if __name__ == "__main__":
     level = int(math.log(n, grid))
     print level
     iterations = 0;
-    pi, iterations = MultiLevel(P, grid, 1)
+    pi, iterations = MultiLevel(P, grid, 3)
     #print pi
     end = time.time()
     print "Number of Iterations: ", iterations
