@@ -12,11 +12,12 @@ import pdb
 import time
 import sys
 
-def MultiLevel(P, grid = 2, strategy = 1):
+def MultiLevel(P, grid = 4, strategy = 1):
     n = P.shape[0];
     count = 0;
-    if  n <= 4:
+    if  n <= 2 * grid:
 #        return linalg.solve(P, np.zeros((n,1)))
+
         return GaussSeidel(np.transpose(P), n, 1e-7, True)
     else:
 #        p_tilde = GaussSeidel(np.transpose(P), n, 3, False)
@@ -25,15 +26,20 @@ def MultiLevel(P, grid = 2, strategy = 1):
 #        p_bar_next = MultiLevel(P_next, level-1)
         p_tilde, subcount = GaussSeidel(np.transpose(P), n, 20, False)
         count += subcount
+
         if strategy == 1:
             cluster = Partition(P, grid)
-        elif strategy == 2:
-            cluster = GraphPartitionByConnectedComponent(P)
+        # elif strategy == 2:
+        #     cluster = GraphPartitionByConnectedComponent(P)
         elif strategy == 3:
             cluster = GraphPartitionByMCL(np.transpose(P))
         else:
             print "Invalid strategy!"
+        strategy = 1
         P_next, p_tilde_next = Coarse(P, p_tilde, cluster);
+        for i in range(P_next.shape[0]):
+            if P_next[i][i] == 0:
+                return GaussSeidel(np.transpose(P), n, 1e-7, True)
         p_bar_next, count = MultiLevel(P_next, grid, strategy)
         p_star_next = np.divide(p_bar_next, p_tilde_next)
         p_star = I(p_star_next, n, cluster)

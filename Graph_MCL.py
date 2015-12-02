@@ -8,16 +8,17 @@ from BlockedMatrix import BlockedMatrix
 from plotGraph import plotGraph
 
 def GraphPartitionByMCL(Q, exp=2, inf=2, max_loop=10):
-    Q = removeDiag(Q)
-    Q = normalize(Q)
+    P = np.copy(Q)
+    P = removeDiag(P)
+    P = normalize(P)
 
     for i in range(max_loop):
-        Q = inflate(Q, inf)
-        Q = expand(Q, exp)
-        if stop(Q, i):
+        P = inflate(P, inf)
+        P = expand(P, exp)
+        if stop(P, i):
             break
 
-    cluster = getCluster(Q)
+    cluster = getCluster(P)
     return cluster
 
 def removeDiag(Q):
@@ -48,7 +49,6 @@ def stop(Q, i):
 def getCluster(Q):
     cluster = []
     n = Q.shape[0]
-    pdb.set_trace()
     visited = [False] * n
     i = 0;
     while(i < n):

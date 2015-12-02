@@ -16,6 +16,7 @@ def BlockedMatrix(n,m):
     for i in range(n):
         r = randint(0, m-1)
 	cluster[r].append(i)
+    print cluster
     for j in range(m):
 	for k in range(len(cluster[j])):
 	    local_sum = 0
@@ -26,11 +27,21 @@ def BlockedMatrix(n,m):
 		    res[row][col]=randint(1, 3)
 		    local_sum = local_sum + res[row][col]
 	    res[row][row] = -local_sum
-    # plotGraph(res, name)
+    print res
+    plotGraph(res, "orignal")
+    for c1 in range(m):
+        for c2 in range(m):
+            if c1 != c2 and len(cluster[c1])>0 and len(cluster[c2]) > 0:
+                row = cluster[c1][randint(0, len(cluster[c1])-1)]
+                col = cluster[c2][randint(0, len(cluster[c2])-1)]
+                res[row][col] = 1
+                res[row][row] = res[row][row] - res[row][col]
+                print (row, col)
     return res
 
 '''__main()'''
 if __name__ == "__main__":
-    n = 8
+    n = 100
     m = 4
-    print BlockedMatrix(n, m)
+    Q = BlockedMatrix(n, m)
+    plotGraph(Q, "general")
