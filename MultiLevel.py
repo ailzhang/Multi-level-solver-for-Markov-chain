@@ -5,15 +5,17 @@ import numpy as np
 from BirthDeath import BirthDeath
 from GaussSeidel import GaussSeidel
 from numpy import linalg
+from GraphConnectedComponents import GraphPartitionByConnectedComponent
+from Graph_MCL import GraphPartitionByMCL
 import math
 import pdb
 import time
 import sys
 
-def MultiLevel(P, level, count, grid = 2):
+def MultiLevel(P, grid = 2, strategy = 1):
     n = P.shape[0];
-    subcount = 0;
-    if level == 0:
+    count = 0;
+    if  n <= 4:
 #        return linalg.solve(P, np.zeros((n,1)))
         return GaussSeidel(np.transpose(P), n, 1e-7, True)
     else:
@@ -21,11 +23,18 @@ def MultiLevel(P, level, count, grid = 2):
 #        cluster = Partition(P)
 #        P_next, p_tilde_next = Coarse(P, p_tilde, cluster)
 #        p_bar_next = MultiLevel(P_next, level-1)
-        p_tilde, subcount = GaussSeidel(np.transpose(P), n, 3, False)
+        p_tilde, subcount = GaussSeidel(np.transpose(P), n, 20, False)
         count += subcount
-        cluster = Partition(P, grid);
+        if strategy == 1:
+            cluster = Partition(P, grid)
+        elif strategy == 2:
+            cluster = GraphPartitionByConnectedComponent(P)
+        elif strategy == 3:
+            cluster = GraphPartitionByMCL(np.transpose(P))
+        else:
+            print "Invalid strategy!"
         P_next, p_tilde_next = Coarse(P, p_tilde, cluster);
-        p_bar_next, count = MultiLevel(P_next, level-1, count)
+        p_bar_next, count = MultiLevel(P_next, grid, strategy)
         p_star_next = np.divide(p_bar_next, p_tilde_next)
         p_star = I(p_star_next, n, cluster)
         p_bar = C(p_tilde, p_star)
@@ -82,7 +91,7 @@ if __name__ == "__main__":
     level = int(math.log(n, grid))
     print level
     iterations = 0;
-    pi, iterations = MultiLevel(P, level, iterations, grid)
+    pi, iterations = MultiLevel(P, grid, 1)
     #print pi
     end = time.time()
     print "Number of Iterations: ", iterations

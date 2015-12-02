@@ -7,7 +7,7 @@ import pdb
 from BlockedMatrix import BlockedMatrix
 from plotGraph import plotGraph
 
-def MCL(Q, exp=2, inf=2, max_loop=10):
+def GraphPartitionByMCL(Q, exp=2, inf=2, max_loop=10):
     Q = removeDiag(Q)
     Q = normalize(Q)
 

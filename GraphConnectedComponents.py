@@ -6,7 +6,7 @@ import networkx as nx
 import numpy as np
 from BlockedMatrix import BlockedMatrix
 
-def GraphPartition(P):
+def GraphPartitionByConnectedComponent(P):
     G = nx.Graph(data = P)
     connected = nx.connected_components(G)
     cluster = [list(i) for i in list(connected)]
