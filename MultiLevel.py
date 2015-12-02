@@ -5,6 +5,7 @@ import numpy as np
 from BirthDeath import BirthDeath
 from GaussSeidel import GaussSeidel
 from numpy import linalg
+import math
 import pdb
 import time 
 import sys
@@ -28,7 +29,7 @@ def MultiLevel(P, level, count):
 
 def Partition(P):
     n = P.shape[0];#return demension of P
-    grid = 2
+    grid = 4
     originalset = range(n)
     cluster = [originalset[i:i+grid] for i in range(0, (n / grid - 1) * grid,grid)]
     cluster.append(range((n/grid-1)*grid, n))#[[0,1],[2,3],[4,5]]
@@ -72,8 +73,9 @@ if __name__ == "__main__":
     death = 2
     Q = BirthDeath(n, birth, death) #generate transition matrix
     P = np.transpose(Q)
-    #pdb.set_trace()
-    level = 1
+#    pdb.set_trace()
+    level = int(math.log(n, 4))
+    print level
     iterations = 0;
     pi, iterations = MultiLevel(P, level, iterations)
     #print pi
