@@ -28,6 +28,7 @@ def GaussSeidel(Q, n, lamda, stopBylamda):
 if __name__ == "__main__":
     start = time.time()
     lamda = 1e-7
+#    n = 100
     n = int(sys.argv[1])
     birth = 1
     death = 2

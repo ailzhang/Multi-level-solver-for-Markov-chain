@@ -17,6 +17,10 @@ def MultiLevel(P, level, count):
 #        return linalg.solve(P, np.zeros((n,1)))
         return GaussSeidel(np.transpose(P), n, 1e-7, True)
     else:
+#        p_tilde = GaussSeidel(np.transpose(P), n, 3, False)
+#        cluster = Partition(P)
+#        P_next, p_tilde_next = Coarse(P, p_tilde, cluster)
+#        p_bar_next = MultiLevel(P_next, level-1)
         p_tilde, subcount = GaussSeidel(np.transpose(P), n, 3, False)
         count += subcount
         cluster = Partition(P);
@@ -67,6 +71,7 @@ def C(p_tilde, p_star):
     return p_bar
 
 if __name__ == "__main__":
+#    n = 100
     start = time.time()
     n = int(sys.argv[1])
     birth = 1
