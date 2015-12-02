@@ -9,14 +9,14 @@ import numpy as np
 from plotGraph import plotGraph
 from GaussSeidel import GaussSeidel
 
-start = time.time()
+
 n = int(sys.argv[1])
 m = int(sys.argv[2])
 Q = BlockedMatrix(n, m)
 plotGraph(Q, "blockmatrix")
 P = np.transpose(Q)
 #    pdb.set_trace()
-
+start = time.time()
 pi, iterations = MultiLevel(P, strategy = 3)
 end = time.time()
 print "Number of Iterations: ", iterations
@@ -26,7 +26,7 @@ start = time.time()
 pi_1, iterations_1 = MultiLevel(P, strategy = 1)
 #print pi
 end = time.time()
-print "Number of Iterations: ", iterations
+print "Number of Iterations: ", iterations_1
 print "Number of States: ", n
 print "Time Elapsed: ", end-start, " seconds"
 

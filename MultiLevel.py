@@ -13,6 +13,7 @@ import time
 import sys
 
 def MultiLevel(P, grid = 4, strategy = 1):
+    start = time.time()
     n = P.shape[0];
     count = 0;
     if  n <= 2 * grid:
@@ -26,7 +27,6 @@ def MultiLevel(P, grid = 4, strategy = 1):
 #        p_bar_next = MultiLevel(P_next, level-1)
         p_tilde, subcount = GaussSeidel(np.transpose(P), n, 20, False)
         count += subcount
-
         if strategy == 1:
             cluster = Partition(P, grid)
         # elif strategy == 2:
@@ -40,11 +40,13 @@ def MultiLevel(P, grid = 4, strategy = 1):
         for i in range(P_next.shape[0]):
             if P_next[i][i] == 0:
                 return GaussSeidel(np.transpose(P), n, 1e-7, True)
-        p_bar_next, count = MultiLevel(P_next, grid, strategy)
+        p_bar_next, subcount = MultiLevel(P_next, grid, strategy)
         p_star_next = np.divide(p_bar_next, p_tilde_next)
         p_star = I(p_star_next, n, cluster)
         p_bar = C(p_tilde, p_star)
-        return (p_bar / np.sum(p_bar), count)
+        end = time.time()
+        print end-start
+        return (p_bar / np.sum(p_bar), count+subcount)
 
 def Partition(P, grid):
     n = P.shape[0];#return demension of P
