@@ -7,6 +7,9 @@ from random import *
 import pdb
 from plotGraph import plotGraph
 
+# BlockedMatrix function is used to generate the Q matrix of a Blocked Markov process.
+# For every 2 blocks, we randomly pick 1 state in each block and connect them.
+# Otherwise there is no steady state solution for blocked matrix.
 # n is the number of states
 # m is number of blocks
 

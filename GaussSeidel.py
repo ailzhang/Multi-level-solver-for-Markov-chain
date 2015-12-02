@@ -5,6 +5,11 @@ import pdb
 from BirthDeath import BirthDeath
 import time
 
+# GaussSeidel is a function that compute steady-state solution using GaussSeidel
+# method. We can can stop the iteration by lamda. And lamda has two meanings.
+# When stopBylamda is set true, iterations will stop when ||pi - pi_next|| < lamda.
+# When it's set false, GaussSeidel will stop after running lamda iterations.   
+
 def GaussSeidel(Q, n, lamda, stopBylamda):
     pi = np.ones((n,1))
     count = 0
@@ -34,14 +39,7 @@ if __name__ == "__main__":
     death = 2
     Q = BirthDeath(n, birth, death)
     iterations = 0;
-#    Q = np.array([[-1.0, 1.0, 0.0, 0.0],\
-#              [1.0, -1.0-l, 0.0, l], \
-#              [2*l, 0.0, -1.0-2*l, 1.0],\
-#              [0.0, 0.0, 1.0, -1.0]])
-#    print Q
-#    print "final result!!!"
     pi, iterations = GaussSeidel(Q,n,lamda, True)
-#    print pi
     end = time.time()
     print "Number of Iterations: ", iterations
     print "Number of States: ", n

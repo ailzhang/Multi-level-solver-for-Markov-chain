@@ -7,6 +7,11 @@ import pdb
 from BlockedMatrix import BlockedMatrix
 from plotGraph import plotGraph
 
+# GraphPartitionByMCL function is a grpah clustering algorithm.
+# Given a matrix Q, it will return a 2d-list as clusters.
+# For example, [[0,1],[2,3,4]] means there are two clusters.
+# The first two nodes are grouped together, and the last three nodes are grouped. 
+
 def GraphPartitionByMCL(Q, exp=2, inf=2, max_loop=10):
     P = np.copy(Q)
     P = removeDiag(P)

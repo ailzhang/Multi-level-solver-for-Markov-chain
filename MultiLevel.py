@@ -12,19 +12,21 @@ import pdb
 import time
 import sys
 
+# MultiLevel function is used to compute steady-state solution using MultiLevel
+# algorithm. @grid is used to control the number of states to combine in the basic
+# strategy. @strategy = 1 is the basic strategy. @strategy = 3 is the MCL strategy.
+
+# @strategy = 2 was an idea that use connected components to cluster graph nodes.
+# But finally we found that there is no steady-state for those particular process.
+# So this part has been deleted.
+
 def MultiLevel(P, grid = 4, strategy = 1):
     start = time.time()
     n = P.shape[0];
     count = 0;
     if  n <= 2 * grid:
-#        return linalg.solve(P, np.zeros((n,1)))
-
         return GaussSeidel(np.transpose(P), n, 1e-7, True)
     else:
-#        p_tilde = GaussSeidel(np.transpose(P), n, 3, False)
-#        cluster = Partition(P)
-#        P_next, p_tilde_next = Coarse(P, p_tilde, cluster)
-#        p_bar_next = MultiLevel(P_next, level-1)
         p_tilde, subcount = GaussSeidel(np.transpose(P), n, 20, False)
         count += subcount
         if strategy == 1:
@@ -36,10 +38,10 @@ def MultiLevel(P, grid = 4, strategy = 1):
         else:
             print "Invalid strategy!"
         strategy = 1
-        start = time.time()
         P_next, p_tilde_next = Coarse(P, p_tilde, cluster);
-        end = time.time()
-        print "Coarse Time:", end-start
+        #It's possible that after the aggregation, the coarsed process doesn't have
+        # steady-state. In this case, we need to perform GaussSeidel to return the
+        # right answer.
         for i in range(P_next.shape[0]):
             if P_next[i][i] == 0:
                 return GaussSeidel(np.transpose(P), n, 1e-7, True)
@@ -47,12 +49,10 @@ def MultiLevel(P, grid = 4, strategy = 1):
         p_star_next = np.divide(p_bar_next, p_tilde_next)
         p_star = I(p_star_next, n, cluster)
         p_bar = C(p_tilde, p_star)
-        #end = time.time()
-        #print end-start
         return (p_bar / np.sum(p_bar), count+subcount)
 
 def Partition(P, grid):
-    n = P.shape[0];#return demension of P
+    n = P.shape[0];
     originalset = range(n)
     cluster = [originalset[i:i+grid] for i in range(0, (n / grid - 1) * grid,grid)]
     cluster.append(range((n/grid-1)*grid, n))#[[0,1],[2,3],[4,5]]
@@ -76,7 +76,6 @@ def Coarse(P, p_tilde, cluster):
                     sum_i += P[l][k]
                 sum += sum_i * p_tilde[k]
             P_next[j][i] = sum / p_tilde_next[i]
-#    print "P_next:", P_next
     print "P_next length:", len(P_next), "p_tilde_next length:", len(p_tilde_next)
     return (P_next, p_tilde_next)
 
@@ -100,12 +99,9 @@ if __name__ == "__main__":
     grid = 4
     Q = BirthDeath(n, birth, death) #generate transition matrix
     P = np.transpose(Q)
-#    pdb.set_trace()
     level = int(math.log(n, grid))
-    print level
     iterations = 0;
     pi, iterations = MultiLevel(P, grid, 3)
-    #print pi
     end = time.time()
     print "Number of Iterations: ", iterations
     print "Number of States: ", n

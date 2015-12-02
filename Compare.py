@@ -5,7 +5,8 @@ import numpy as np
 import math
 import time
 import sys
-
+# Compare function is used to run GaussSeidel and ML(basic strategy) for the
+# same BirthDeath Markov Process.
 #    n = 100
 start = time.time()
 n = int(sys.argv[1])
@@ -14,7 +15,6 @@ death = 1
 Q = BirthDeath(n, birth, death) #generate transition matrix
 P = np.transpose(Q)
 grid = 4
-#    pdb.set_trace()
 level = int(math.log(n, 4))
 print level
 iterations = 0;

@@ -4,6 +4,7 @@
 
 import numpy as np
 
+# BirthDeath function is used to generate the Q matrix of a birth-death Markov process
 # n is the number of states
 # birth is the birth rate
 # death is the death rate
